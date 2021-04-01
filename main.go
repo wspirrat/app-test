@@ -1,14 +1,19 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
+	"io"
+	"log"
+	"net/http"
+	"os"
 )
 
-func main() {
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
-    })
+func hello(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Hello World")
+}
 
-    http.ListenAndServe(":80", nil)
+func main() {
+	port := os.Getenv("PORT")
+	http.HandleFunc("/", hello)
+	log.Print("Listening on :" + port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
